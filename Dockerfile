@@ -28,8 +28,6 @@ RUN a2enmod rewrite
 # Copy existing application directory contents
 COPY . /var/www/html
 
-RUN touch .env
-
 COPY /docker/apache/default.conf /etc/apache2/sites-available/000-default.conf
  
 RUN chown -R www-data:www-data /var/www/html/storage
@@ -42,12 +40,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader
  
 # Set environment variables
-ENV APP_ENV=local
+ENV APP_ENV=docker
 ENV APP_KEY=base64:eBlugB467OvhsrawcaDihaeefssCFMficBw9e5b0N44=
 ENV DB_CONNECTION=mysql
 ENV DB_HOST=mysql
 ENV DB_PORT=3306
-ENV DB_DATABASE=mood_db
+ENV DB_DATABASE=blog_db
 ENV DB_USERNAME=root
 ENV DB_PASSWORD=root
 
@@ -65,4 +63,5 @@ RUN npm run dev
  
 # Expose port 80 and start Apache server
 EXPOSE 80
+
 CMD ["apache2-foreground"]
